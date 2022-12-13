@@ -1,0 +1,54 @@
+name: Deploy GH Pages
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+
+  deploy-master:
+    name: '🚧  Build & deploy 🚀'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v2
+
+      # https://github.com/actions/setup-node
+      - name: 'Setup node'
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: 'Cache NPM dependencies'
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: node-${{ hashFiles('package-lock.json') }}
+
+      - name: 'Install dependencies'
+        run: |
+          echo "::group::npm install"
+            npm install --color=always --no-progress
+          echo "::endgroup::"
+
+      - name: 'Build'
+        run: |
+          echo "::group::build"
+            npx webpack --mode=production
+          echo "::endgroup::"
+        env:
+          WEBPACK_PUBLIC_PATH: /talk-stenope/build
+
+      # https://github.com/marketplace/actions/deploy-to-github-pages
+      - name: '🚀 Deploy'
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          COMMIT_MESSAGE: "[AUTO] Static site update for ${{ github.sha }}"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages # The branch the action should deploy to.
+          FOLDER: build # The folder the action should deploy.
+          CLEAN: true # Automatically remove deleted files from the deploy branch
+          CLEAN_EXCLUDE: '["pr/"]' # Don't clean the PR deployments

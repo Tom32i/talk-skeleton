@@ -1,0 +1,87 @@
+name: Deploy PR
+
+on:
+  pull_request:
+    types: [ opened, synchronize, reopened, ready_for_review ]
+
+jobs:
+
+  deploy-pr:
+    name: '🚧  Build & deploy 🚀'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # Do not run on WIP or Draft PRs
+    if: "!github.event.pull_request || github.event.pull_request.draft == false"
+
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v2
+
+      - name: 'Create GitHub deployment'
+        uses: chrnorm/deployment-action@releases/v1
+        id: deployment
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          target_url: https://tom32i.github.io/talk-stenope/pr/${{ github.event.number }}
+          environment: staging
+
+      # https://github.com/actions/setup-node
+      - name: 'Setup node'
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: 'Cache NPM dependencies'
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: node-${{ hashFiles('package-lock.json') }}
+
+      - name: 'Install dependencies'
+        run: |
+          echo "::group::npm install"
+            npm install --color=always --no-progress
+          echo "::endgroup::"
+
+      - name: 'Build'
+        run: |
+          echo "::group::build"
+            npx webpack --mode=production
+          echo "::endgroup::"
+        env:
+          WEBPACK_PUBLIC_PATH: /talk-stenope/build
+
+      # https://github.com/marketplace/actions/deploy-to-github-pages
+      - name: '🚀 Deploy'
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          COMMIT_MESSAGE: |
+            [AUTO] Deploy PR #${{ github.event.number }}
+
+            for commit ${{ github.sha }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages # The branch the action should deploy to.
+          FOLDER: build # The folder the action should deploy.
+          TARGET_FOLDER: pr/${{ github.event.number }} # The folder where the action should deploy on the deployment branch.
+          CLEAN: true # Automatically remove deleted files from the deploy branch
+
+      - name: 'Update deployment status (success)'
+        if: success()
+        uses: chrnorm/deployment-status@releases/v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          description: "Deployed PR #${{ github.event.number }}"
+          target_url: https://tom32i.github.io/talk-stenope/pr/${{ github.event.number }}/
+          environment_url: https://tom32i.github.io/talk-stenope/pr/${{ github.event.number }}/
+          state: "success"
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+
+      - name: 'Update deployment status (failure)'
+        if: failure()
+        uses: chrnorm/deployment-status@releases/v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          description: "Failed to deploy PR #${{ github.event.number }}"
+          state: "failure"
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
