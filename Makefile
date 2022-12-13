@@ -17,4 +17,4 @@ build:
 
 ## Serve
 serve:
-	npx http-server ./build
+	npx http-server ./build -p 8032
