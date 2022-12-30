@@ -1,14 +1,14 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const path = require('path');
+const buildPath = require('path').resolve(__dirname, 'build');
 
 module.exports = {
   target: 'web',
   entry: './assets/js/index.js',
   output: {
     filename: 'talk.js',
-    path: path.resolve(__dirname, 'build'),
+    path: buildPath,
   },
   module: {
     rules: [
@@ -48,5 +48,13 @@ module.exports = {
         { from: 'assets/img/', to: 'img' },
       ],
     }),
-  ]
+  ],
+  devServer: {
+    static: {
+      directory: buildPath,
+    },
+    hot: false,
+    compress: true,
+    port: 8032,
+  },
 };

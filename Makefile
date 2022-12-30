@@ -7,14 +7,10 @@ default: install build serve
 install:
 	npm install
 
-## Start watcher
-watch:
-	npx webpack --watch --mode=development
-
 ## Build
 build:
 	npx webpack --mode=production
 
-## Serve
-serve:
-	npx http-server ./build -p 8032
+## Start watcher and server
+start:
+	npx webpack serve --mode=development
