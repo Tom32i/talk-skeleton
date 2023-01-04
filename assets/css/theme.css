@@ -370,7 +370,7 @@
 
 
 /*********************************************
- * Tanks
+ * Custom
  *********************************************/
 
 .end {
@@ -384,4 +384,10 @@
 
 .end .thanks {
   margin-bottom: 1em;
+}
+
+.reveal .caption {
+  font-size: 0.6em;
+  line-height: 1;
+  margin: 0;
 }

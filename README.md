@@ -8,12 +8,6 @@ Slides: https://tom32i.github.io/talk-skeleton
 
 ## Development
 
-### Start watcher
-
-    make watch
-
-### Start local server
-
-    make serve
+    make start
 
 Go to [localhost:8032](http://localhost:8032)
