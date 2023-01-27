@@ -9,8 +9,8 @@ install:
 
 ## Build
 build:
-	npx webpack --mode=production
+	npm run build
 
 ## Start watcher and server
 start:
-	npx webpack serve --mode=development
+	npm run start
