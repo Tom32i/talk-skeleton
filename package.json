@@ -7,7 +7,7 @@
   "author": "Thomas Jarrand <thomas.jarrand@gmail.com> (https://thomas.jarrand.fr)",
   "license": "MIT",
   "dependencies": {
-    "gamepad.js": "^2.0.0",
+    "gamepad.js": "^2.1",
     "reveal.js": "^4.4.0"
   },
   "devDependencies": {
