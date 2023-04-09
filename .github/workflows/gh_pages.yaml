@@ -33,7 +33,7 @@ jobs:
       - name: '🚀 Deploy'
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: '.' # The folder the action should deploy.
+          folder: build # The folder the action should deploy.
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: gh-pages # The branch the action should deploy to.
           commit-message: "[AUTO] Github pages update for ${{ github.sha }}"

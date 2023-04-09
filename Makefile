@@ -1,7 +1,7 @@
 .SILENT:
 .PHONY: build
 
-default: install build serve
+default: install build start
 
 ## Install dependencies
 install:

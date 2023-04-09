@@ -356,18 +356,19 @@
  * Backgrounds
  *********************************************/
 
+[data-background-image]:not(.default) h1,
+[data-background-image]:not(.default) h2,
 [data-background-image]:not(.default) h3,
-[data-background-image]:not(.default) h4 {
-    color: white;
-    text-shadow: 0px 1px 2px black;
-}
-
+[data-background-image]:not(.default) h4,
+[data-background-image]:not(.default) h5,
+[data-background-color]:not(.default) h1,
+[data-background-color]:not(.default) h2,
 [data-background-color]:not(.default) h3,
-[data-background-color]:not(.default) h4 {
-    color: white;
-    text-shadow: 0px 1px 2px rgba(0,0,0,0.5);
+[data-background-color]:not(.default) h4,
+[data-background-color]:not(.default) h5 {
+  color: white;
+  text-shadow: 0px 1px 2px rgba(0,0,0,0.5);
 }
-
 
 /*********************************************
  * Custom
